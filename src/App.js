@@ -1,25 +1,59 @@
-import logo from './logo.svg';
+// App.js
+import React, { useState } from 'react';
+import Navbar from './components/Navbar';
+import Exercise from './components/Exercise';
+import UserProfile from './components/UserProfile';
+import Webcam from 'react-webcam';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [showUserProfile, setShowUserProfile] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
+
+  const handleExerciseClick = () => {
+    setShowCamera(true);
+  };
+
+  const handleCloseCamera = () => {
+    setShowCamera(false);
+  };
+
+  const handleProfileClick = () => {
+    setShowUserProfile(true);
+  };
+
+  const handleCloseProfile = () => {
+    setShowUserProfile(false);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar onProfileClick={handleProfileClick} />
+      <div className="exercise-list">
+        {[...Array(9)].map((_, index) => (
+          <Exercise
+            key={index}
+            name={`Exercise ${index + 1}`}
+            details="Short details"
+            onClick={handleExerciseClick}
+          />
+        ))}
+      </div>
+      {showCamera && (
+        <div className="camera-popup">
+          <button onClick={handleCloseCamera}>Go Back</button>
+          <Webcam />
+        </div>
+      )}
+      {showUserProfile && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <UserProfile onClose={handleCloseProfile} />
+          </div>
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default App;
